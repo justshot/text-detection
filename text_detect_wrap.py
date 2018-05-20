@@ -25,7 +25,26 @@ def detect_text_area(io_handler):
     rectangles = selector.select_according_to_merged_times_and_area(rectangles)
     # Save result
     io_handler.write_result(img, rectangles)
+    # return the text area rectangles for clean
+    return rectangles
 
+def detect_rectangles(img):
+    if img is None:
+        raise FileNotFoundError
+    # Detect text area
+    detector = Detector()
+    rectangles = detector.find_all_text_rectangles(img)
+    if len(rectangles) == 0:
+        print("[Warning] Not text rectangle detected !!")
+    # Merge rectangles
+    merger = Merger()
+    rectangles = merger.merge_rectangle_list(rectangles)
+    # Select rectangles
+    selector = Selector()
+    rectangles = selector.select_according_to_merged_times_and_area(rectangles)
+    # return the text area rectangles for clean
+    return rectangles
+    
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
